@@ -1,3 +1,4 @@
+from pprint import pprint
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,13 +29,14 @@ variables = {
 }
 
 
-# def linearpath(image):  # image is a binary image
+def lineal_path(bin_image):
 
-#     image = rot90(image)
-#     L = len(image)
-#     lcorr1 = np.zeros((L, 1))
-#     lcorr2 = np.zeros((L, 1))
-#     FC = np.arange(L, 1+- 1, - 1)
+    image = bin_img.transpose()  # rotate image
+    # L = len(image)
+    corr1 = np.zeros((len(image), 1))
+    # print(corr1)
+    corr2 = np.zeros((len(image), 1))
+    # something = np.arange(, 1+- 1, - 1)
 #     FC = FC * L
 #     for ii in np.arange(1, L+1, 1).reshape(-1):
 #         clm1 = image(:, ii)
@@ -123,6 +125,13 @@ def binarize_image(img, binarization_type="sauvola"):
 
 if __name__ == "__main__":
     img = "sample.png"
+    # todo handle error if fails
     img_url = 'https://qa.materialsmine.org/api/files/59667d92e74a1d62877b8fb5'
-    bin_img = binarize_image(img_url, binarization_type="wan")
-    Image.fromarray(bin_img).show()
+    bin_img = binarize_image(img, binarization_type="wan")
+    # print(len(bin_img[0]))
+    # lineal_path(bin_img)
+    step = 0.1
+    ex = np.arange(0, 5+step, step)
+    ex1 = np.linspace(0, 5, num=6)
+    pprint(ex1)
+    # Image.fromarray(bin_img.transpose()).show()
