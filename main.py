@@ -85,39 +85,45 @@ def is_url(name):
     return url_pattern.match(name) is not None
 
 
-def binarize_image(img, binarization_type="sauvola"):
+def binarize_image(img, binarization_type="sauvola", window_size=75, k=0.2):
 
     grayscale_image = read_image(img)
     binary_image = np.empty(grayscale_image.shape, grayscale_image.dtype)
 
     if binarization_type == "sauvola":
+        print("Binarizing image with Sauvola binarization")
         sauvola = doxapy.Binarization(doxapy.Binarization.Algorithms.SAUVOLA)
         sauvola.initialize(grayscale_image)
-        sauvola.to_binary(binary_image, {"window": 75, "k": 0.2})
+        sauvola.to_binary(binary_image, {"window": window_size, "k": k})
         return binary_image
 
     elif binarization_type == "otsu":
+        print("Binarizing image with Otsu binarization")
         otsu = doxapy.Binarization(doxapy.Binarization.Algorithms.OTSU)
         otsu.initialize(grayscale_image)
         otsu.to_binary(binary_image)
         return binary_image
 
     elif binarization_type == "niblack":
+        print("Binarizing image with Niblack binarization")
         niblack = doxapy.Binarization(doxapy.Binarization.Algorithms.NIBLACK)
         niblack.initialize(grayscale_image)
-        niblack.to_binary(binary_image, {"window": 75, "k": 0.01})
+        niblack.to_binary(
+            binary_image, {"window": window_size, "k": k})  # k=0.01
         return binary_image
 
     elif binarization_type == "wolf":
+        print("Binarizing image with Wolf binarization")
         wolf = doxapy.Binarization(doxapy.Binarization.Algorithms.WOLF)
         wolf.initialize(grayscale_image)
-        wolf.to_binary(binary_image, {"window": 75, "k": 0.2})
+        wolf.to_binary(binary_image, {"window": window_size, "k": k})
         return binary_image
 
     elif binarization_type == "wan":
+        print("Binarizing image with Wan binarization")
         wan = doxapy.Binarization(doxapy.Binarization.Algorithms.WAN)
         wan.initialize(grayscale_image)
-        wan.to_binary(binary_image, {"window": 75, "k": 0.2})
+        wan.to_binary(binary_image, {"window": window_size, "k": k})
         return binary_image
     else:
         raise Exception("Binarization type not recognized")
@@ -127,11 +133,11 @@ if __name__ == "__main__":
     img = "sample.png"
     # todo handle error if fails
     img_url = 'https://qa.materialsmine.org/api/files/59667d92e74a1d62877b8fb5'
-    bin_img = binarize_image(img, binarization_type="wan")
+    bin_img = binarize_image(img)
     # print(len(bin_img[0]))
     # lineal_path(bin_img)
-    step = 0.1
-    ex = np.arange(0, 5+step, step)
-    ex1 = np.linspace(0, 5, num=6)
-    pprint(ex1)
-    # Image.fromarray(bin_img.transpose()).show()
+    # step = 0.1
+    # ex = np.arange(0, 5+step, step)
+    # ex1 = np.linspace(0, 5, num=6)
+    # pprint(ex1)
+    Image.fromarray(bin_img).show()
