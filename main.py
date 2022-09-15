@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import re
 import requests
+import random
 import doxapy
 
 NANOMINE_URL = "https://qa.materialsmine.org/api/graphql"
@@ -29,35 +30,46 @@ variables = {
 }
 
 
-def lineal_path(bin_image):
+def two_point_correlation(bin_image, radius=10):
 
-    image = bin_img.transpose()  # rotate image
-    # L = len(image)
-    corr1 = np.zeros((len(image), 1))
-    # print(corr1)
-    corr2 = np.zeros((len(image), 1))
-    # something = np.arange(, 1+- 1, - 1)
-#     FC = FC * L
-#     for ii in np.arange(1, L+1, 1).reshape(-1):
-#         clm1 = image(:, ii)
-#         clm2 = image(ii, :)
-#         clm1 = bwlabel(clm1)
-#         clm2 = bwlabel(clm2)
-#         maxnum1 = np.amax(clm1)
-#         maxnum2 = np.amax(clm2)
-#         if maxnum1 > 0:
-#             for jj in np.arange(1, maxnum1+1, 1).reshape(-1):
-#                 cnt1 = sum(clm1 == jj)
-#                 for kk in np.arange(1, cnt1+1, 1).reshape(-1):
-#                     lcorr1[kk] = lcorr1(kk) + cnt1 - kk + 1
-#         if maxnum2 > 0:
-#             for jj in np.arange(1, maxnum2+1, 1).reshape(-1):
-#                 cnt2 = sum(clm2 == jj)
-#                 for kk in np.arange(1, cnt2+1, 1).reshape(-1):
-#                     lcorr2[kk] = lcorr2(kk) + cnt2 - kk + 1
+    # get dimensions of image
+    height, width = bin_image.shape
 
-#     lcorr = (lcorr1 + lcorr2) / 2.0 / FC
-#     return lcorr
+    # print dimensions of image
+    print("Image dimensions: {}x{}".format(width, height))
+
+    # generate random coordinate
+    def generate_random_point():
+        return random.randint(0, height - 1), random.randint(0, width - 1)
+
+    def get_second_point(point):
+        x, y = point
+        x1_range = range(x - radius, x + radius + 1)
+        print(x1_range)
+
+    iteration_counter = 0
+    same_color = 0
+
+    trials = int(width * height/2)
+
+    for i in range(trials):
+        p1 = generate_radom_point()
+        p2 = generate_radom_point()
+
+        # prevent p1 and p2 from being the same point
+        while (p1 == p2):
+            p2 = generate_radom_point()
+
+        [x1, y1] = p1
+        [x2, y2] = p2
+
+        if bin_image[x1, y1] == bin_image[x2, y2]:
+            same_color += 1
+
+        total += 1
+
+    print("Total points: {}, same color {} \nThe probability is {}".format(
+        total, same_color, same_color/total))
 
 
 def read_image(file):
@@ -134,10 +146,12 @@ if __name__ == "__main__":
     # todo handle error if fails
     img_url = 'https://qa.materialsmine.org/api/files/59667d92e74a1d62877b8fb5'
     bin_img = binarize_image(img)
-    # print(len(bin_img[0]))
-    # lineal_path(bin_img)
-    # step = 0.1
-    # ex = np.arange(0, 5+step, step)
-    # ex1 = np.linspace(0, 5, num=6)
-    # pprint(ex1)
+    # two_point_correlation(bin_img)
     Image.fromarray(bin_img).show()
+
+    def get_second_point(point, radius=10):
+        x, y = point
+        x1_range = np.arange(x - radius, x + radius + 1, 1)
+        x1_range = x1_range[x1_range >= 0]
+
+    get_second_point((1, 1))
